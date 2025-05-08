@@ -1,0 +1,35 @@
+/* login.css */
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-pref-width: 100px;
+}
+
+.submit-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.reset-button {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-pref-width: 200px;
+}
+/* 错误状态样式 */
+.error-field {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+}
+
+/* 提示文本样式 */
+.hint-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666;
+}
