@@ -5,11 +5,24 @@ import org.json.JSONObject;
 
 public class MapModel {
     private int[][] matrix;
+    private int [][]originalMatrix;
+    public int[][] copyMatrix(int[][] matrix) {
+        int[][] copy = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            System.arraycopy(matrix[i], 0, copy[i], 0, matrix[i].length);
+        }
+        return copy;
+    }
 
     public MapModel(int[][] matrix) {
         this.matrix = matrix;
+        this.originalMatrix=copyMatrix(matrix);
     }
 
+    public void resetOriginalMatrix() {
+        this.matrix = copyMatrix(originalMatrix);
+
+    }
     public int getWidth() {
         return this.matrix[0].length;
     }
