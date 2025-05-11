@@ -5,6 +5,10 @@ import model.MapModel;
 import view.game.BoxComponent;
 import view.game.GamePanel;
 
+import model.timer.*;
+import model.*;
+import model.log.TimeLogger;
+
 /**
  * It is a bridge to combine GamePanel(view) and MapMatrix(model) in one game.
  * You can design several methods about the game logic in this class.
@@ -20,15 +24,6 @@ public class GameController {
     }
 
     public void restartGame() {
-        /* 重新加载初始地图
-        int[][] originalMatrix = {
-                {1, 2, 2, 1, 1},
-                {3, 4, 4, 2, 2},
-                {3, 4, 4, 1, 0},
-                {1, 2, 2, 1, 0},
-                {1, 1, 1, 1, 1}
-        };
-        this.model = new MapModel(originalMatrix);*/
         this.view.resetGame(this.model);
         this.view.setSteps(0);
         this.view.setSelectedBox(null); // 清除选中状态
@@ -233,7 +228,15 @@ public class GameController {
         restartGame();
     }
 
+    // 初始化计时器和日志记录器
+    TimerManager timerManager = new TimerManager(30 * 60 * 1000); // 30分钟限制
+    TimeLogger timeLogger = new TimeLogger(timerManager.getGameTime());
+//todo:非常紧急了。
+    // 创建真实对象
+//    Board realBoard = new Board();
 
+    // 创建代理对象
+//    Board board = ProxyFactory.createProxy(realBoard, Board.class, timerManager, timeLogger, currentUser);
 
 
 

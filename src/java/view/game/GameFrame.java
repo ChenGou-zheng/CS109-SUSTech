@@ -24,18 +24,15 @@ public class GameFrame extends Application {
     private Button loadBtn;
     private Label stepLabel;
     private GamePanel gamePanel;
+    private MapModel mapModel;//当前游戏中传入的model模型
+
+    public GameFrame(MapModel mapModel) {
+        this.mapModel = mapModel;
+    }
 
     @Override
     public void start(Stage primaryStage) {
         // 初始化模型和面板
-        int[][] temp = {
-                {1, 2, 2, 1, 1},
-                {3, 4, 4, 2, 2},
-                {3, 4, 4, 1, 0},
-                {1, 2, 2, 1, 0},
-                {1, 1, 1, 1, 1}
-        };
-        MapModel mapModel = new MapModel(temp);
         gamePanel = new GamePanel(mapModel);
         controller = new GameController(gamePanel, mapModel);
         gamePanel.setController(controller);
