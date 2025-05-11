@@ -1,14 +1,12 @@
 package view.login;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import view.FxComponentUtil;
+import view.FrameUtil;
 import view.game.GameFrame;
 
 public class LoginFrame extends Application {
@@ -25,34 +23,42 @@ public class LoginFrame extends Application {
         root.setPrefSize(400, 300);
 
         // 标题
-        Label title = FxComponentUtil.createLabel(root, "Login", Font.font("Arial", 24), 150, 30);
+        Label title = FrameUtil.createLabel(root, "Login", Font.font("Arial", 24), 150, 30);
 
         // 用户名标签和输入框
-        FxComponentUtil.createLabel(root, 50, 80, "Username:");
-        username = FxComponentUtil.createTextField(root, 120, 75, 200);
+        FrameUtil.createLabel(root, 50, 80, "Username:");
+        username = FrameUtil.createTextField(root, 120, 75, 200);
 
         // 密码标签和输入框
-        FxComponentUtil.createLabel(root, 50, 130, "Password:");
-        password = FxComponentUtil.createPasswordField(root, 120, 125, 200);
+        FrameUtil.createLabel(root, 50, 130, "Password:");
+        password = FrameUtil.createPasswordField(root, 120, 125, 200);
 
         // 按钮
-        submitBtn = FxComponentUtil.createButton(root, "Confirm", 80, 180);
+        submitBtn = FrameUtil.createButton(root, "Confirm", 80, 180);
         submitBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         submitBtn.setPrefWidth(100);
 
-        resetBtn = FxComponentUtil.createButton(root, "Reset", 220, 180);
+        resetBtn = FrameUtil.createButton(root, "Reset", 220, 180);
         resetBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         resetBtn.setPrefWidth(100);
 
         // 事件处理
         submitBtn.setOnAction(e -> {
-            System.out.println("Username = " + username.getText());
-            System.out.println("Password = " + password.getText());
+            String user = username.getText();
+            String pass = password.getText();
+            if (user.isEmpty() || pass.isEmpty()) {
+                showAlert("Error", "Username or password cannot be empty!");
+                return;
+            }
+
+            System.out.println("Username = " + user);
+            System.out.println("Password = " + pass);
+
             if (this.gameFrame != null) {
-                this.gameFrame.show();
+                Stage gameStage = new Stage();
+                this.gameFrame.start(gameStage);
                 primaryStage.hide();
             }
-            //todo: check login info
         });
 
         resetBtn.setOnAction(e -> {
@@ -69,6 +75,14 @@ public class LoginFrame extends Application {
 
     public void setGameFrame(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void main(String[] args) {

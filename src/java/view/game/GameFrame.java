@@ -1,14 +1,22 @@
 package view.game;
 
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+
 import model.MapModel;
+import controller.GameController;
+import model.Direction;
+import model.MapFileManager;
+
 
 public class GameFrame extends Application {
     private GameController controller;
@@ -20,46 +28,88 @@ public class GameFrame extends Application {
     @Override
     public void start(Stage primaryStage) {
         // 初始化模型和面板
-        MapModel mapModel = new MapModel(5, 5); // 示例，实际应从参数传入
+        int[][] temp = {
+                {1, 2, 2, 1, 1},
+                {3, 4, 4, 2, 2},
+                {3, 4, 4, 1, 0},
+                {1, 2, 2, 1, 0},
+                {1, 1, 1, 1, 1}
+        };
+        MapModel mapModel = new MapModel(temp);
         gamePanel = new GamePanel(mapModel);
         controller = new GameController(gamePanel, mapModel);
         gamePanel.setController(controller);
 
         // 创建UI组件
-        stepLabel = new Label("Start");
+        stepLabel = new Label("Steps: 0");
         stepLabel.setStyle("-fx-font-size: 22; -fx-font-style: italic;");
 
-        restartBtn = new Button("Restart");
-        loadBtn = new Button("Load");
-
-        // 在GameFrame中使游戏面板自适应窗口大小
-        gamePanel.prefWidthProperty().bind(root.widthProperty().multiply(0.7));
-
-        // 按钮事件处理
-        restartBtn.setOnAction(e -> {
+        restartBtn = createButton("Restart", e -> {
             controller.restartGame();
             gamePanel.requestFocus();
         });
 
-        loadBtn.setOnAction(e -> {
-            // 使用JavaFX的输入对话框
-            String path = javax.swing.JOptionPane.showInputDialog("Input path:");
-            System.out.println(path);
-            gamePanel.requestFocus();
-        });
+        loadBtn = createButton("Load", e -> handleLoadMap());
 
         // 布局
         VBox controlPanel = new VBox(20, stepLabel, restartBtn, loadBtn);
         controlPanel.setPadding(new Insets(20));
+        controlPanel.setStyle("-fx-background-color: #f0f0f0;");
 
         BorderPane root = new BorderPane();
         root.setCenter(gamePanel);
         root.setRight(controlPanel);
 
+        // 动态调整宽度
+        gamePanel.prefWidthProperty().bind(root.widthProperty().multiply(0.7));
+        controlPanel.prefWidthProperty().bind(root.widthProperty().multiply(0.3));
+
         // 场景和舞台设置
         Scene scene = new Scene(root, 800, 600);
+        setupKeyEvents(scene);
 
-        // 键盘事件处理
+        primaryStage.setTitle("2025 CS109 Project Demo");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // 初始焦点
+        gamePanel.requestFocus();
+    }
+
+    private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
+        Button button = new Button(text);
+        button.setStyle("-fx-font-size: 16; -fx-padding: 10;");
+        button.setOnAction(action);
+        return button;
+    }
+
+    private void handleLoadMap() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Load Map");
+        dialog.setHeaderText("Enter the path to the map file:");
+        dialog.setContentText("Path:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(path -> {
+            try {
+                MapModel newModel = MapFileManager.loadMapFromFile(path);
+                controller.loadMap(newModel);
+                gamePanel.requestFocus();
+            } catch (Exception e) {
+                showError("Failed to load map. Please check the file path.");
+            }
+        });
+    }
+
+    private void showError(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void setupKeyEvents(Scene scene) {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case RIGHT -> gamePanel.doMove(Direction.RIGHT);
@@ -68,13 +118,6 @@ public class GameFrame extends Application {
                 case DOWN -> gamePanel.doMove(Direction.DOWN);
             }
         });
-
-        primaryStage.setTitle("2025 CS109 Project Demo");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // 初始焦点
-        gamePanel.requestFocus();
     }
 
     public static void main(String[] args) {

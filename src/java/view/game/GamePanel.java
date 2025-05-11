@@ -3,8 +3,10 @@ package view.game;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Label;
 import model.Direction;
 import model.MapModel;
+import controller.GameController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ public class GamePanel extends Pane {
     private int steps;
     private final int GRID_SIZE = 50;
     private BoxComponent selectedBox;
+    private Label stepLabel;
 
     public GamePanel(MapModel model) {
         boxes = new ArrayList<>();
@@ -32,49 +35,39 @@ public class GamePanel extends Pane {
         background.setStrokeWidth(2);
         this.getChildren().add(background);
 
+        // 初始化步数标签
+        stepLabel = new Label("Step: 0");
+        stepLabel.setLayoutX(10);
+        stepLabel.setLayoutY(model.getHeight() * GRID_SIZE + 10);
+        this.getChildren().add(stepLabel);
+
         initialGame();
     }
 
     public void initialGame() {
+        // 重置步数并更新步数标签
         this.steps = 0;
+        updateStepLabel();
+
+        // 清空现有的 BoxComponent
         boxes.clear();
         this.getChildren().removeIf(node -> node instanceof BoxComponent);
 
-        // 复制地图数据
-        int[][] map = new int[model.getHeight()][model.getWidth()];
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                map[i][j] = model.getId(i, j);
-            }
-        }
+        // 获取地图数据
+        int[][] map = model.getMatrix();
 
-        // 创建BoxComponent
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] == 0) continue;
+        // 遍历地图并创建 BoxComponent
+        for (int row = 0; row < map.length; row++) {
+            for (int col = 0; col < map[row].length; col++) {
+                int id = map[row][col];
+                if (id == 0) continue;
 
-                BoxComponent box = null;
-                if (map[i][j] == 1) {
-                    box = new BoxComponent(Color.ORANGE, i, j, GRID_SIZE, GRID_SIZE);
-                } else if (map[i][j] == 2) {
-                    box = new BoxComponent(Color.PINK, i, j, GRID_SIZE * 2, GRID_SIZE);
-                    map[i][j + 1] = 0;
-                } else if (map[i][j] == 3) {
-                    box = new BoxComponent(Color.BLUE, i, j, GRID_SIZE, GRID_SIZE * 2);
-                    map[i + 1][j] = 0;
-                } else if (map[i][j] == 4) {
-                    box = new BoxComponent(Color.GREEN, i, j, GRID_SIZE * 2, GRID_SIZE * 2);
-                    map[i][j + 1] = 0;
-                    map[i + 1][j] = 0;
-                    map[i + 1][j + 1] = 0;
-                }
-
+                BoxComponent box = createBoxComponent(id, row, col, map);
                 if (box != null) {
-                    box.setLayoutX(j * GRID_SIZE + 2);
-                    box.setLayoutY(i * GRID_SIZE + 2);
+                    box.setLayoutX(col * GRID_SIZE + 2);
+                    box.setLayoutY(row * GRID_SIZE + 2);
                     boxes.add(box);
                     this.getChildren().add(box);
-                    map[i][j] = 0;
 
                     // 添加鼠标点击事件
                     box.setOnMouseClicked(e -> handleBoxClick(box));
@@ -82,6 +75,34 @@ public class GamePanel extends Pane {
             }
         }
     }
+
+    private BoxComponent createBoxComponent(int id, int row, int col, int[][] map) {
+        BoxComponent box = null;
+        switch (id) {
+            case 1:
+                box = new BoxComponent(Color.ORANGE, row, col, GRID_SIZE, GRID_SIZE);
+                break;
+            case 2:
+                box = new BoxComponent(Color.PINK, row, col, GRID_SIZE * 2, GRID_SIZE);
+                map[row][col + 1] = 0; // 占用右侧格子
+                break;
+            case 3:
+                box = new BoxComponent(Color.BLUE, row, col, GRID_SIZE, GRID_SIZE * 2);
+                map[row + 1][col] = 0; // 占用下方格子
+                break;
+            case 4:
+                box = new BoxComponent(Color.GREEN, row, col, GRID_SIZE * 2, GRID_SIZE * 2);
+                map[row][col + 1] = 0; // 占用右侧格子
+                map[row + 1][col] = 0; // 占用下方格子
+                map[row + 1][col + 1] = 0; // 占用右下角格子
+                break;
+        }
+        return box;
+    }
+
+
+
+
 
     private void handleBoxClick(BoxComponent clickedComponent) {
         if (selectedBox == null) {
@@ -97,7 +118,6 @@ public class GamePanel extends Pane {
         }
     }
 
-    // 移动方法（键盘事件将在GameFrame中处理）
     public void doMove(Direction direction) {
         if (selectedBox != null) {
             if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), direction)) {
@@ -108,15 +128,12 @@ public class GamePanel extends Pane {
 
     public void afterMove() {
         this.steps++;
-        // 更新stepLabel的逻辑将在GameFrame中处理
+        updateStepLabel();
     }
 
-    // 保留其他必要的方法...
-}
-    public void setStepLabel(JLabel stepLabel) {
-        this.stepLabel = stepLabel;
+    private void updateStepLabel() {
+        stepLabel.setText(String.format("Step: %d", steps));
     }
-
 
     public void setController(GameController controller) {
         this.controller = controller;
@@ -131,9 +148,7 @@ public class GamePanel extends Pane {
     }
 
     public void removeAllBoxes() {
-        for (BoxComponent box : boxes) {
-            this.remove(box);
-        }
+        this.getChildren().removeAll(boxes);
         boxes.clear();
     }
 
@@ -147,7 +162,7 @@ public class GamePanel extends Pane {
 
     public void setSteps(int steps) {
         this.steps = steps;
-        this.stepLabel.setText(String.format("Step: %d", this.steps));
+        updateStepLabel();
     }
 
     public void resetGame(MapModel newModel) {
@@ -155,7 +170,6 @@ public class GamePanel extends Pane {
         this.removeAllBoxes();
         initialGame();
         this.selectedBox = null;
-        this.repaint();
     }
 
     public void setSelectedBox(BoxComponent box) {
@@ -176,18 +190,4 @@ public class GamePanel extends Pane {
         }
         return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

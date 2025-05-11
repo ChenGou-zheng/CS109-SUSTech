@@ -3,6 +3,11 @@ package view.game;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.animation.Animation;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
+import javafx.animation.TranslateTransition;
 
 public class BoxComponent extends StackPane {
     private Color color;
@@ -18,7 +23,7 @@ public class BoxComponent extends StackPane {
         this.isSelected = false;
 
         rectangle = new Rectangle(width, height, color);
-        rectangle.setStroke(Color.DARK_GRAY);
+        rectangle.setStroke(Color.DARKGRAY);
         rectangle.setStrokeWidth(1);
 
         this.getChildren().add(rectangle);
@@ -31,7 +36,7 @@ public class BoxComponent extends StackPane {
             rectangle.setStroke(Color.RED);
             rectangle.setStrokeWidth(3);
         } else {
-            rectangle.setStroke(Color.DARK_GRAY);
+            rectangle.setStroke(Color.DARKGRAY);
             rectangle.setStrokeWidth(1);
         }
     }

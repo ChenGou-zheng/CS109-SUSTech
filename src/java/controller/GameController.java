@@ -4,7 +4,6 @@ import model.Direction;
 import model.MapModel;
 import view.game.BoxComponent;
 import view.game.GamePanel;
-import javax.swing.*;
 
 /**
  * It is a bridge to combine GamePanel(view) and MapMatrix(model) in one game.
@@ -17,7 +16,7 @@ public class GameController {
     public GameController(GamePanel view, MapModel model) {
         this.view = view;
         this.model = model;
-        view.setController(this);
+        this.view.setController(this); // 确保 setController 方法接收 GameController 类型
     }
 
     public void restartGame() {
@@ -33,6 +32,11 @@ public class GameController {
         this.view.resetGame(this.model);
         this.view.setSteps(0);
         this.view.setSelectedBox(null); // 清除选中状态
+    }
+
+    public void loadMap(MapModel newModel) {
+        view.resetGame(newModel); // 调用 GamePanel 的 resetGame 方法更新视图
+        view.setSteps(0); // 重置步数
     }
 
     public boolean doMove(int row, int col, Direction direction) {
@@ -53,18 +57,17 @@ public class GameController {
     }
 
     private boolean canMove(int row, int col, Direction dir, int blockId) {
-        switch (blockId) {
-            case 1: // 1×1方块
-                return checkSingleMove(row, col, dir);
-            case 2: // 1×2方块
-                return checkHorizontalMove(row, col, dir);
-            case 3: // 2×1方块
-                return checkVerticalMove(row, col, dir);
-            case 4: // 2×2方块
-                return checkBigBlockMove(row, col, dir);
-            default:
-                return false;
-        }
+        return switch (blockId) {
+            case 1 -> // 1×1方块
+                    checkSingleMove(row, col, dir);
+            case 2 -> // 1×2方块
+                    checkHorizontalMove(row, col, dir);
+            case 3 -> // 2×1方块
+                    checkVerticalMove(row, col, dir);
+            case 4 -> // 2×2方块
+                    checkBigBlockMove(row, col, dir);
+            default -> false;
+        };
     }
 
     private boolean checkSingleMove(int row, int col, Direction dir) {
@@ -182,7 +185,7 @@ public class GameController {
             selectedCol = selected.getCol();
         }
 
-        // 重置所有方块位置
+        // 重置所有方块位置，这里view是GamePanel类的实例不是路径名！
         view.removeAllBoxes();
         view.initialGame();
 
@@ -218,15 +221,17 @@ public class GameController {
     }
 
     private void showWinMessage() {
-        JOptionPane.showMessageDialog(view,
-                "恭喜你赢了！\n步数: " + view.getSteps(),
-                "游戏胜利",
-                JOptionPane.INFORMATION_MESSAGE);
+        // 使用 JavaFX 的 Alert 替代 JOptionPane
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle("游戏胜利");
+        alert.setHeaderText(null);
+        alert.setContentText("恭喜你赢了！\n步数: " + view.getSteps());
+
+        alert.showAndWait();
 
         // 重置游戏
         restartGame();
     }
-
 
 
 

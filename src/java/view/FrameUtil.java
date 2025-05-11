@@ -10,7 +10,7 @@ import javafx.scene.text.Font;
 /**
  * JavaFX UI组件工具类
  */
-public class FxComponentUtil {
+public class FrameUtil {
     public static Label createLabel(Pane parent, double x, double y, String text) {
         Label label = new Label(text);
         label.setLayoutX(x);

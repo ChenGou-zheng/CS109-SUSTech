@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4e58b602-43bb-457f-b851-c870b4340139" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/login/LoginFrame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../resources/css/login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/Homework.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Homework.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/model/Direction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../model/Direction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/model/MapModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../model/MapModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/Homework.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/Homework.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/controller/GameController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/controller/GameController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/model/Direction.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/model/Direction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/model/MapModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/model/MapModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/FrameUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/FrameUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/game/BoxComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/game/BoxComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/game/GameFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/game/GameFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/game/GamePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/game/GamePanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/game/ListenerPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/game/ListenerPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/out/production/Homework/view/login/LoginFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Homework/view/login/LoginFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/FrameUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/FrameUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/game/BoxComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/game/BoxComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/game/GameFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/game/GameFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/game/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/game/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/game/ListenerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/game/ListenerPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/view/login/LoginFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/../view0/login/LoginFrame.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2woLznhGDxt7pcacnhZ1TgGoJaw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4e58b602-43bb-457f-b851-c870b4340139" name="Changes" comment="" />
+      <created>1746703247639</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746703247639</updated>
+      <workItem from="1746703248861" duration="118000" />
+      <workItem from="1746703396161" duration="445000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

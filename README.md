@@ -1,2 +1,0 @@
-# CS109-SUSTech
-
