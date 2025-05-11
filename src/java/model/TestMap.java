@@ -1,4 +1,3 @@
-/*
 package model;
 
 public class TestMap {
@@ -31,5 +30,3 @@ public class TestMap {
         }
     }
 }
-
- */

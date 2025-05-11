@@ -9,6 +9,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         //创建日志模型
+        //todo:写入log
         LogModel logModel = new LogModel();
 
         // 创建地图模型
@@ -35,3 +36,7 @@ public class Main extends Application {
         launch(args);
     }
 }
+
+
+
+

@@ -5,7 +5,16 @@ import org.json.JSONObject;
 
 public class MapModel {
     private int[][] matrix;
-    private int [][]originalMatrix;
+    private int[][]originalMatrix;
+    private int[][] targetPosition = new int[2][2];
+    private int mapType;
+    private String mapName;
+    private int leaseMove;
+    private String mapId;//唯一主键标识，或许使用hash对应？
+//todo:hash自循环算法，生成单个json文件，然后代入hash算法得到mapId，然后写入json文件，批量生成最后合并
+//todo:在Advanced模式中有过多参数，使用起来或许有点复杂？使用builder模式？还是其实使用场合不多？
+
+    //todo:targetPosition 未在其他位置更新
     public int[][] copyMatrix(int[][] matrix) {
         int[][] copy = new int[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
@@ -26,23 +35,24 @@ public class MapModel {
     public int getWidth() {
         return this.matrix[0].length;
     }
-
     public int getHeight() {
         return this.matrix.length;
     }
-
     public int getId(int row, int col) {
         return matrix[row][col];
     }
-
     public int[][] getMatrix() {
         return matrix;
     }
+    public int getMapType() {return mapType;}
+    public int getLeaseMove() {return leaseMove;}
+    public String getMapName() {return mapName;}
+    public String getMapId() {return mapId;}
+    public int[][] getTargetPosition() {return targetPosition;}
 
     public boolean checkInWidthSize(int col) {
         return col >= 0 && col < matrix[0].length;
     }
-
     public boolean checkInHeightSize(int row) {
         return row >= 0 && row < matrix.length;
     }
@@ -52,6 +62,11 @@ public class MapModel {
         JSONObject obj = new JSONObject();
         obj.put("width", getWidth());
         obj.put("height", getHeight());
+        obj.put("targetPosition", targetPosition);
+        obj.put("mapType", mapType);
+        obj.put("mapName", mapName);
+        obj.put("leaseMove", leaseMove);
+        obj.put("mapId", mapId);
 
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < getHeight(); i++) {
@@ -64,7 +79,9 @@ public class MapModel {
         obj.put("map", jsonArray);
         return obj;
     }
-
+//todo:JSON只修改存储格式
+//todo:人工识别挖掘各种数据集？
+//todo：美术资源
     // 从 JSON 对象解析
     public static MapModel fromJson(JSONObject obj) {
         int width = obj.getInt("width");
