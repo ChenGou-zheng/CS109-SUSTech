@@ -11,9 +11,9 @@ public enum Direction {
         this.col = col;
     }
     public int getRow() {
-        return row;
+        return this.row;
     }
     public int getCol() {
-        return col;
+        return this.col;
     }
 }

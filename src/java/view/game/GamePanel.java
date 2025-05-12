@@ -60,6 +60,39 @@ public class GamePanel extends Pane {
         });
     }
 
+    public int getGRID_SIZE() {return GRID_SIZE;}
+    public void setController(GameController controller) {this.controller = controller;}
+    public List<BoxComponent> getBoxes() {return boxes;}
+    public int getSteps() {return steps;}
+    public void setSteps(int steps) {
+        this.steps = steps;
+        updateStepLabel();//todo：这里写这个合适吗？update更新是不是应该在controller里？setter and getter 是不是应该只提供 fields
+    }
+    public BoxComponent getSelectedBox() {
+        return selectedBox;
+    }
+
+    public BoxComponent getBoxAt(int row, int col) {
+        for (BoxComponent box : boxes) {
+            if (box.getRow() == row && box.getCol() == col) {
+                return box;
+            }
+        }
+        return null;//todo：恢复连续选中？！
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void initialGame() {
         // 重置步数并更新步数标签
         this.steps = 0;
@@ -134,6 +167,7 @@ public class GamePanel extends Pane {
         }
     }
 
+
     public boolean doMove(int row, int col, Direction direction) {
         if (controller != null && controller.doMove(row, col, direction)) {
             afterMove(); // 更新全局步数
@@ -151,31 +185,17 @@ public class GamePanel extends Pane {
         stepLabel.setText(String.format("Step: %d", steps));
     }
 
-    public void setController(GameController controller) {
-        this.controller = controller;
-    }
 
 
 
-    public int getGRID_SIZE() {
-        return GRID_SIZE;
-    }
+
+
+
+
 
     public void removeAllBoxes() {
         this.getChildren().removeAll(boxes);
         boxes.clear();
-    }
-
-    public List<BoxComponent> getBoxes() {
-        return boxes;
-    }
-
-    public int getSteps() {
-        return steps;
-    }
-    public void setSteps(int steps) {
-        this.steps = steps;
-        updateStepLabel();
     }
 
     public void resetGame(MapModel newModel) {
@@ -193,16 +213,7 @@ public class GamePanel extends Pane {
             this.selectedBox.setSelected(true); // 设置新选中的方块
         }
     }
-    public BoxComponent getSelectedBox() {
-        return selectedBox;
-    }
 
-    public BoxComponent getBoxAt(int row, int col) {
-        for (BoxComponent box : boxes) {
-            if (box.getRow() == row && box.getCol() == col) {
-                return box;
-            }
-        }
-        return null;
-    }
+
+
 }

@@ -49,6 +49,11 @@ public class MapModel {
     }
     public int[][] getMatrix() {
         return matrix;
+    }//todo:输出深拷贝,还是这里需要统一量？状态管理！
+
+    public void setMatrix(int row, int col, int value) {
+        //这里假定row和col已经检查过了
+        this.matrix[row][col] = value;
     }
     public int getMapType() {return mapType;}
     public int getLeaseMove() {return leaseMove;}
@@ -57,6 +62,7 @@ public class MapModel {
     public int[][] getTargetPosition() {return targetPosition;}
 
     public boolean checkInWidthSize(int col) {
+
         return col >= 0 && col < matrix[0].length;
     }
     public boolean checkInHeightSize(int row) {

@@ -21,8 +21,7 @@ public class BoxComponent extends StackPane {
         this.row = row;
         this.col = col;
         this.isSelected = false;
-        //这里使用左上角块作为定位块。
-        //todo:但是对于同类型块重叠了怎么办？
+
 
         rectangle = new Rectangle(width, height, color);
         rectangle.setStroke(Color.DARKGRAY);

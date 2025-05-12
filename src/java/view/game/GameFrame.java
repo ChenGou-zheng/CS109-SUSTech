@@ -97,7 +97,6 @@ public class GameFrame extends Application {
             }
         });
     }
-
     private void showError(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -105,8 +104,6 @@ public class GameFrame extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
     public static void main(String[] args) {
         launch(args);
     }
