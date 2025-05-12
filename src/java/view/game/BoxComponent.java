@@ -35,6 +35,7 @@ public class BoxComponent extends StackPane {
         if (isSelected) {
             rectangle.setStroke(Color.RED);
             rectangle.setStrokeWidth(3);
+            this.bringToFront();
         } else {
             rectangle.setStroke(Color.DARKGRAY);
             rectangle.setStrokeWidth(1);
@@ -54,4 +55,11 @@ public class BoxComponent extends StackPane {
     public void setRow(int row) { this.row = row; }
     public int getCol() { return col; }
     public void setCol(int col) { this.col = col; }
+
+    public void bringToFront() {
+        if (this.getParent() != null) {
+            this.toFront();
+        }
+    }
+
 }

@@ -32,6 +32,7 @@ public class GameController {
             moveHandler.moveBlock(row, col, direction, blockId);
             updateBoxPositions();
 
+
             return true;
         }
         return false;

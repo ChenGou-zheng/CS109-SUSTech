@@ -45,9 +45,10 @@ public class GameFrame extends Application {
             controller.restartGame();
             gamePanel.requestFocus();
         });
+        restartBtn.setFocusTraversable(false); // 禁用焦点
 
         loadBtn = createButton("Load", e -> handleLoadMap());
-
+        loadBtn.setFocusTraversable(false); // 禁用焦点
         // 布局
         VBox controlPanel = new VBox(20, stepLabel, restartBtn, loadBtn);
         controlPanel.setPadding(new Insets(20));
