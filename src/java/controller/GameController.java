@@ -2,6 +2,7 @@ package controller;
 
 import model.Direction;
 import model.MapModel;
+import view.game.BoxComponent;
 import view.game.GamePanel;
 import controller.ConditionChecker;
 
