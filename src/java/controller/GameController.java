@@ -2,6 +2,7 @@ package controller;
 
 import model.Direction;
 import model.MapModel;
+import view.game.BoxComponent;
 import view.game.GamePanel;
 import view.game.BoxComponent;
 import controller.ConditionChecker;
@@ -47,6 +48,7 @@ public class GameController {
 
 // 更新视图
             updateBoxPositions();
+
 
             return true;
         }

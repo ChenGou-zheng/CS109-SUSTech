@@ -62,6 +62,8 @@ public class BoxComponent extends StackPane {
             rectangle.setStrokeWidth(3); // 边框宽度
             rectangle.setArcWidth(10); // 圆角宽度
             rectangle.setArcHeight(10); // 圆角高度
+            rectangle.setStrokeWidth(3);
+            this.bringToFront();
         } else {
             rectangle.setStroke(Color.DARKGRAY);
             rectangle.setStrokeWidth(1);
@@ -87,6 +89,13 @@ public class BoxComponent extends StackPane {
     public void setRow(int row) { this.row = row; }
     public int getCol() { return col; }
     public void setCol(int col) { this.col = col; }
+
+    public void bringToFront() {
+        if (this.getParent() != null) {
+            this.toFront();
+        }
+    }
+
 }
 
 //todo:等改完bug后再改成SceneBuilder格式
