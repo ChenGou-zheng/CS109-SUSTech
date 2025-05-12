@@ -63,7 +63,7 @@ public class GameFrame extends Application {
 
         // 场景和舞台设置
         Scene scene = new Scene(root, 800, 600);
-        setupKeyEvents(scene);
+        //调整后删除，转移 GamePanel, setupKeyEvents(scene);
 
         primaryStage.setTitle("2025 CS109 Project Demo");
         primaryStage.setScene(scene);
@@ -106,16 +106,6 @@ public class GameFrame extends Application {
         alert.showAndWait();
     }
 
-    private void setupKeyEvents(Scene scene) {
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case RIGHT -> gamePanel.doMove(Direction.RIGHT);
-                case LEFT -> gamePanel.doMove(Direction.LEFT);
-                case UP -> gamePanel.doMove(Direction.UP);
-                case DOWN -> gamePanel.doMove(Direction.DOWN);
-            }
-        });
-    }
 
     public static void main(String[] args) {
         launch(args);

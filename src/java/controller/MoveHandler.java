@@ -35,13 +35,17 @@ public class MoveHandler {
     private boolean checkSingleMove(int row, int col, Direction dir) {
         int newRow = row + dir.getRow();
         int newCol = col + dir.getCol();
-        return model.checkInHeightSize(newRow) &&
-            model.checkInWidthSize(newCol) &&
-            model.getId(newRow, newCol) == 0;
+        return model.getId(newRow, newCol) == 0 &&
+            model.checkInHeightSize(newRow) &&
+            model.checkInWidthSize(newCol);
     }
 
     private boolean checkHorizontalMove(int row, int col, Direction dir) {
         int newRow = row + dir.getRow();
+        int newCol = col + dir.getCol();
+        if (newCol < 0 || newCol >= model.getWidth()) {
+            return false; // 超出边界，不能移动
+        }
         if (dir == Direction.UP || dir == Direction.DOWN) {
             // 垂直移动时检查两列
             return model.checkInHeightSize(newRow) &&
@@ -49,7 +53,6 @@ public class MoveHandler {
                     model.getId(newRow, col + 1) == 0;
         } else {
             // 水平移动时检查新列
-            int newCol = col + (dir == Direction.LEFT ? -1 : 2);
             return model.checkInWidthSize(newCol) &&
                     model.getId(row, newCol) == 0 &&
                     model.getId(row, newCol - 1) == 0;
@@ -58,6 +61,10 @@ public class MoveHandler {
 
     private boolean checkVerticalMove(int row, int col, Direction dir) {
         int newCol = col + dir.getCol();
+        int newRow = row + dir.getRow();
+        if (newRow < 0 || newRow >= model.getHeight()) {
+            return false; // 超出边界，不能移动
+        }
         if (dir == Direction.LEFT || dir == Direction.RIGHT) {
             // 水平移动时检查两行
             return model.checkInWidthSize(newCol) &&
@@ -65,7 +72,7 @@ public class MoveHandler {
                     model.getId(row + 1, newCol) == 0;
         } else {
             // 垂直移动时检查新行
-            int newRow = row + (dir == Direction.UP ? -1 : 2);
+
             return model.checkInHeightSize(newRow) &&
                     model.getId(newRow, col) == 0 &&
                     model.getId(newRow - 1, col) == 0;

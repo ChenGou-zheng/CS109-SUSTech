@@ -13,7 +13,6 @@ public class MapModel {
     private String mapId;//唯一主键标识，或许使用hash对应？
 //todo:hash自循环算法，生成单个json文件，然后代入hash算法得到mapId，然后写入json文件，批量生成最后合并
 //todo:在Advanced模式中有过多参数，使用起来或许有点复杂？使用builder模式？还是其实使用场合不多？
-
     //todo:targetPosition 未在其他位置更新
     public int[][] copyMatrix(int[][] matrix) {
         int[][] copy = new int[matrix.length][matrix[0].length];
@@ -26,6 +25,10 @@ public class MapModel {
     public MapModel(int[][] matrix) {
         this.matrix = matrix;
         this.originalMatrix=copyMatrix(matrix);
+        this.targetPosition[0][0] = 4;
+        this.targetPosition[0][1] = 2;
+        this.targetPosition[1][0] = 4;
+        this.targetPosition[1][1] = 3;
     }
 
     public void resetOriginalMatrix() {
@@ -39,6 +42,9 @@ public class MapModel {
         return this.matrix.length;
     }
     public int getId(int row, int col) {
+        if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[0].length) {
+            throw new IllegalArgumentException("Invalid row or column index: (" + row + ", " + col + ")");
+        }
         return matrix[row][col];
     }
     public int[][] getMatrix() {

@@ -17,7 +17,6 @@ public class WinConditionChecker {
         int[] position1 = model.getTargetPosition()[0];
         int[] position2 = model.getTargetPosition()[1];
 
-
         //todo:以后这里根据mapType改变判断条件？
         // 示例：检查2×2方块即曹操是否在目标位置
         if (height >= 3 && width >= 5) {

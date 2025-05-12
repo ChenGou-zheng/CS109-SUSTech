@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import view.FrameUtil;
+import view.util.FrameUtil;
 import view.game.GameFrame;
 
 public class LoginFrame extends Application {

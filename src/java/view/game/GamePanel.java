@@ -8,6 +8,7 @@ import model.Direction;
 import model.MapModel;
 import controller.GameController;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,21 @@ public class GamePanel extends Pane {
         this.getChildren().add(stepLabel);
 
         initialGame();
+
+// 添加键盘事件处理，使面板可以接收键盘输入
+        this.setFocusTraversable(true);
+        this.setOnKeyPressed(e -> {
+            if (selectedBox != null) {
+                int row = selectedBox.getRow();
+                int col = selectedBox.getCol();
+                switch (e.getCode()) {
+                    case RIGHT -> doMove(row, col, Direction.RIGHT);
+                    case LEFT -> doMove(row, col, Direction.LEFT);
+                    case UP -> doMove(row, col, Direction.UP);
+                    case DOWN -> doMove(row, col, Direction.DOWN);
+                }
+            }
+        });
     }
 
     public void initialGame() {
@@ -118,17 +134,17 @@ public class GamePanel extends Pane {
         }
     }
 
-    public void doMove(Direction direction) {
-        if (selectedBox != null) {
-            if (controller.doMove(selectedBox.getRow(), selectedBox.getCol(), direction)) {
-                afterMove();
-            }
+    public boolean doMove(int row, int col, Direction direction) {
+        if (controller != null && controller.doMove(row, col, direction)) {
+            afterMove(); // 更新全局步数
+            return true;
         }
+        return false;
     }
-
     public void afterMove() {
-        this.steps++;
-        updateStepLabel();
+        steps++;
+        updateStepLabel(); // 更新步数标签
+        //todo：原本用的是updateStepLabels？
     }
 
     private void updateStepLabel() {
@@ -139,9 +155,7 @@ public class GamePanel extends Pane {
         this.controller = controller;
     }
 
-    public BoxComponent getSelectedBox() {
-        return selectedBox;
-    }
+
 
     public int getGRID_SIZE() {
         return GRID_SIZE;
@@ -159,7 +173,6 @@ public class GamePanel extends Pane {
     public int getSteps() {
         return steps;
     }
-
     public void setSteps(int steps) {
         this.steps = steps;
         updateStepLabel();
@@ -167,19 +180,21 @@ public class GamePanel extends Pane {
 
     public void resetGame(MapModel newModel) {
         this.model = newModel;
-        this.removeAllBoxes();
-        initialGame();
         this.selectedBox = null;
+        initialGame();
     }
 
     public void setSelectedBox(BoxComponent box) {
         if (this.selectedBox != null) {
-            this.selectedBox.setSelected(false);
+            this.selectedBox.setSelected(false); // 取消之前选中的方块
         }
         this.selectedBox = box;
-        if (box != null) {
-            box.setSelected(true);
+        if (this.selectedBox != null) {
+            this.selectedBox.setSelected(true); // 设置新选中的方块
         }
+    }
+    public BoxComponent getSelectedBox() {
+        return selectedBox;
     }
 
     public BoxComponent getBoxAt(int row, int col) {
