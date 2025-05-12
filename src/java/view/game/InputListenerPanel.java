@@ -4,8 +4,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-public abstract class ListenerPanel extends Pane {
-    public ListenerPanel() {
+public abstract class InputListenerPanel extends Pane {
+    public InputListenerPanel() {
         // 设置焦点以接收键盘事件
         this.setFocusTraversable(true);
 
@@ -35,3 +35,4 @@ public abstract class ListenerPanel extends Pane {
     public abstract void doMoveUp();
     public abstract void doMoveDown();
 }
+

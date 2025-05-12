@@ -2,34 +2,52 @@ package view.game;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 import model.Direction;
 import model.MapModel;
 import controller.GameController;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class GamePanel extends Pane {
     private List<BoxComponent> boxes;
-    private MapModel model;
+    private MapModel mapModel;
     private GameController controller;
     private int steps;
     private final int GRID_SIZE = 50;
     private BoxComponent selectedBox;
     private Label stepLabel;
+    private Circle mouseShadow;//鼠标悬停阴影, 用于强化标记鼠标
 
-    public GamePanel(MapModel model) {
+    public GamePanel(MapModel mapModel) {
         boxes = new ArrayList<>();
-        this.model = model;
+        this.mapModel = mapModel;
         this.selectedBox = null;
+        this.setClip(null);
+
+        // 初始化鼠标阴影
+        mouseShadow = new Circle(10, Color.GRAY);
+        mouseShadow.setOpacity(0.5); // 设置半透明
+        mouseShadow.setVisible(false); // 初始隐藏
+        this.getChildren().add(mouseShadow);
+
+        // 添加鼠标移动事件
+        this.setOnMouseMoved(e -> {
+            mouseShadow.setCenterX(e.getX());
+            mouseShadow.setCenterY(e.getY());
+            mouseShadow.setVisible(true);
+        });
+
+        // 鼠标离开时隐藏阴影
+        this.setOnMouseExited(e -> mouseShadow.setVisible(false));
 
         // 设置背景和边框
         Rectangle background = new Rectangle(
-                model.getWidth() * GRID_SIZE + 4,
-                model.getHeight() * GRID_SIZE + 4,
+                mapModel.getWidth() * GRID_SIZE + 4,
+                mapModel.getHeight() * GRID_SIZE + 4,
                 Color.LIGHTGRAY
         );
         background.setStroke(Color.DARKGRAY);
@@ -39,7 +57,7 @@ public class GamePanel extends Pane {
         // 初始化步数标签
         stepLabel = new Label("Step: 0");
         stepLabel.setLayoutX(10);
-        stepLabel.setLayoutY(model.getHeight() * GRID_SIZE + 10);
+        stepLabel.setLayoutY(mapModel.getHeight() * GRID_SIZE + 10);
         this.getChildren().add(stepLabel);
 
         initialGame();
@@ -81,18 +99,6 @@ public class GamePanel extends Pane {
         return null;//todo：恢复连续选中？！
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public void initialGame() {
         // 重置步数并更新步数标签
         this.steps = 0;
@@ -103,7 +109,7 @@ public class GamePanel extends Pane {
         this.getChildren().removeIf(node -> node instanceof BoxComponent);
 
         // 获取地图数据
-        int[][] map = model.getMatrix();
+        int[][] map = mapModel.getMatrix();
 
         // 遍历地图并创建 BoxComponent
         for (int row = 0; row < map.length; row++) {
@@ -124,7 +130,7 @@ public class GamePanel extends Pane {
             }
         }
     }
-
+//todo:应该就是这里让block消失
     private BoxComponent createBoxComponent(int id, int row, int col, int[][] map) {
         BoxComponent box = null;
         switch (id) {
@@ -146,12 +152,10 @@ public class GamePanel extends Pane {
                 map[row + 1][col + 1] = 0; // 占用右下角格子
                 break;
         }
+        box.setLayoutX(col * GRID_SIZE + 4); // 增加偏移量
+        box.setLayoutY(row * GRID_SIZE + 4); // 增加偏移量
         return box;
     }
-
-
-
-
 
     private void handleBoxClick(BoxComponent clickedComponent) {
         if (selectedBox == null) {
@@ -167,7 +171,6 @@ public class GamePanel extends Pane {
         }
     }
 
-
     public boolean doMove(int row, int col, Direction direction) {
         if (controller != null && controller.doMove(row, col, direction)) {
             afterMove(); // 更新全局步数
@@ -178,28 +181,20 @@ public class GamePanel extends Pane {
     public void afterMove() {
         steps++;
         updateStepLabel(); // 更新步数标签
-        //todo：原本用的是updateStepLabels？
     }
 
     private void updateStepLabel() {
         stepLabel.setText(String.format("Step: %d", steps));
     }
 
-
-
-
-
-
-
-
-
     public void removeAllBoxes() {
         this.getChildren().removeAll(boxes);
         boxes.clear();
+        System.gc();
     }
 
-    public void resetGame(MapModel newModel) {
-        this.model = newModel;
+    public void resetGame(MapModel newmapModel) {
+        this.mapModel = newmapModel;
         this.selectedBox = null;
         initialGame();
     }

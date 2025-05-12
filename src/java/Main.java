@@ -20,7 +20,7 @@ public class Main extends Application {
                 {1, 3, 4, 4},
                 {0, 0, 4, 4}
         });
-
+        //todo:兼任了UI Controller
         // 创建游戏界面
         GameFrame gameFrame = new GameFrame(mapModel);
 

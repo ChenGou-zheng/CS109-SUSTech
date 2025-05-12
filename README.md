@@ -3,10 +3,10 @@
 ## 需要书语解决的bug
 提示：改代码的时候写一下buglog方便理解工作。
 1. 块体选中状态会自动消失——应该是用boxcomponent getboxat方法
+2. 继承Listener抽象类后鼠标选中失效.
 2. 块体 setSelected 后边框颜色显示不全
-3. view.game.ListenerPanel 这个抽象类没有被使用，结构上很奇怪，用 copilt 梳理一下功能，另外
-   - 这个类的功能是监听游戏状态吗？还是监听用户操作？还是监听游戏界面？
-   - 本身不太符合命名规范
+3. view.game.InputListenerPanel 这个抽象类没有被使用，结构上很奇怪，用 copilt 梳理一下功能. 
+- 原来是在 GamePanel 重新写了组块功能
 4. GameController 里面的 handleLoadMap 方法没有被使用和调用
    - 这个方法的功能是加载地图吗？还是加载游戏状态？还是加载游戏数据？
    - 这个方法的参数是一个 MapModel 对象，表示地图模型吗？还是一个字符串，表示地图文件名？
@@ -18,7 +18,7 @@
 8. 方块移动有时突然不动了——是我的电脑问题吗？
 9. 方块碰撞会消失？？
 
-
+//写注释真是好习惯
 
 ## 一些待确定的问题，结构控制与优化
 1. 这个handleLoadMap功能应该在GamePanel里面吗
