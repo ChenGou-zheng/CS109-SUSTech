@@ -3,6 +3,7 @@ package view.game;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.effect.DropShadow;
 import javafx.animation.Animation;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
@@ -15,6 +16,7 @@ public class BoxComponent extends StackPane {
     private int col;
     private boolean isSelected;
     private Rectangle rectangle;
+    private DropShadow shadowEffect;
 
     public BoxComponent(Color color, int row, int col, double width, double height) {
         this.color = color;
@@ -26,23 +28,55 @@ public class BoxComponent extends StackPane {
         rectangle = new Rectangle(width, height, color);
         rectangle.setStroke(Color.DARKGRAY);
         rectangle.setStrokeWidth(1);
+        // 设置圆角矩形, 显示清晰轮廓
 
         this.getChildren().add(rectangle);
+        // 将新创建的BoxComponent添加到StackPane中,即成为子节点
         this.setPrefSize(width, height);
+        //设置 prefferSize,用于Box默认显示大小
+
+        // 添加鼠标悬停效果
+        this.setOnMouseEntered(e -> rectangle.setStroke(Color.LIGHTBLUE)); // 鼠标进入时改变边框颜色
+        this.setOnMouseExited(e -> {
+            if (!isSelected) {
+                rectangle.setStroke(Color.DARKGRAY); // 鼠标离开时恢复默认边框颜色
+            }
+        });
+        //todo:使用css文件定义悬停效果
+        //getStyleClass().add()通过css文件定义悬停效果.
+
+        // 初始化阴影效果
+        shadowEffect = new DropShadow();
+        shadowEffect.setColor(Color.GRAY);
+        shadowEffect.setRadius(10);
+
+        // 鼠标悬停时添加阴影效果
+        //todo:原来是这两种二选一吗?
+        this.setOnMouseEntered(e -> this.setEffect(shadowEffect));
+        this.setOnMouseExited(e -> this.setEffect(null));
+
     }
 
     public void setSelected(boolean isSelected) {
         if (isSelected) {
             rectangle.setStroke(Color.RED);
+            rectangle.setStrokeWidth(3); // 边框宽度
+            rectangle.setArcWidth(10); // 圆角宽度
+            rectangle.setArcHeight(10); // 圆角高度
             rectangle.setStrokeWidth(3);
             this.bringToFront();
         } else {
             rectangle.setStroke(Color.DARKGRAY);
             rectangle.setStrokeWidth(1);
+            rectangle.setArcWidth(5);
+            rectangle.setArcHeight(5);
         }
     }
-    // 在BoxComponent中添加移动动画
-    public void animateMove(double newX, double newY) {
+
+    public void animateMove(int targetRow, int targetCol, double gridSize) {
+        double newX = targetCol * gridSize + 2; // 根据列计算目标X坐标
+        double newY = targetRow * gridSize + 2; // 根据行计算目标Y坐标
+
         TranslateTransition transition = new TranslateTransition(Duration.millis(200), this);
         transition.setToX(newX - this.getLayoutX());
         transition.setToY(newY - this.getLayoutY());
@@ -63,3 +97,6 @@ public class BoxComponent extends StackPane {
     }
 
 }
+
+//todo:等改完bug后再改成SceneBuilder格式
+
