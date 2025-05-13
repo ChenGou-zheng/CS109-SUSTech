@@ -4,7 +4,6 @@ import model.Direction;
 import model.MapModel;
 import view.game.BoxComponent;
 import view.game.GamePanel;
-import view.game.BoxComponent;
 import controller.ConditionChecker;
 
 public class GameController {
@@ -32,20 +31,7 @@ public class GameController {
         int blockId = mapModel.getId(row, col);
         if (moveHandler.canMove(row, col, direction, blockId)) {
             moveHandler.moveBlock(row, col, direction, blockId);
-
-// 获取目标位置
-            int targetRow = row + direction.getRow();
-            int targetCol = col + direction.getCol();
-
-// 获取对应的 BoxComponent
-            BoxComponent box = view.getBoxAt(row, col);
-            if (box != null) {
-                box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
-            }
-
-// 更新视图
             updateBoxPositions();
-
 
             return true;
         }
@@ -61,11 +47,7 @@ public class GameController {
             conditionChecker.showLoseMessage();
         }
     }
-
-
-
-
-
+//Message可以放到Condition,但是电脑怎么一直在加载中呢。卡死了。坏了主机好热。。
     public void restartGame() {
         mapModel.resetOriginalMatrix();
         stateManager.restartGame(mapModel);
