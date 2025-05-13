@@ -25,10 +25,18 @@ switch (blockId) {
 
 基础不牢地动山摇，原来this.field只是为了表示成员变量的区别名，并不一定是instance专属。
 
-## bug表象:原因:解决方案
+## bug表象:原因:解决方案:消耗时间
 - 修改地图matrix数据点觉得不对劲:getMatrix修改地图文件,然后数组reference导致了原始数据被修改:重写getMatrix和setMatrix方法
 - restartGame按钮没有效果:mapModel的matrix一直在被改动,重置自身:另外保存OriginalMatrix
 - ListenerPanel 抽象类居然没有子类:GamePanel里面具体重写业务代码:使用OOP重新设计
+- IDEA找不到指定的类:out文件夹没有生成,需要编辑edit configuration:重新创建CS109Project并添加VMoption:30min
+- 方块移动可以重叠且消失:initial和box对象初始化时占用周围格子为0
+
+调试后发现,方块1地图没改写仍然是0,方块23没有正确加载
+发现GameController里面moveblock写了两次,第二次是getId,于是会不正确加载?抄ai的好事.
+
+
+
 
 #### 4
 运行游戏时问题

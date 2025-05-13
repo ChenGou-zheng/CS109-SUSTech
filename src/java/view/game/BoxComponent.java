@@ -72,7 +72,6 @@ public class BoxComponent extends StackPane {
         }
     }
 
-    // todo:改造这个方法和gamecontroller里面的domove保持一致,或者整体简化.
     public void animateMove(int targetRow, int targetCol, double gridSize) {
         double newX = targetCol * gridSize + 2; // 根据列计算目标X坐标
         double newY = targetRow * gridSize + 2; // 根据行计算目标Y坐标

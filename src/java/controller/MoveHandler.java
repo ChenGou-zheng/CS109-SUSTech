@@ -14,7 +14,7 @@ public class MoveHandler {
         //中间寄存器，底层集成
         int newRow = row + dir.getRow();
         int newCol = col + dir.getCol();
-        clearBlock(row, col, blockId);
+        clearBlockAfterMove(row, col, blockId);
         setBlock(newRow, newCol, blockId);
     }
 
@@ -119,7 +119,7 @@ public class MoveHandler {
         }
     }
 
-    private void clearBlock(int row, int col, int blockId) {
+    private void clearBlockAfterMove(int row, int col, int blockId) {
         mapModel.setMatrix(row, col, 0);
         switch (blockId) {
             case 2:

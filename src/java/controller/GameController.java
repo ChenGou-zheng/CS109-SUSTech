@@ -33,9 +33,6 @@ public class GameController {
         if (moveHandler.canMove(row, col, direction, blockId)) {
             moveHandler.moveBlock(row, col, direction, blockId);
 
-// 调用 MoveHandler 移动逻辑
-            moveHandler.moveBlock(row, col, direction, mapModel.getId(row, col));
-
 // 获取目标位置
             int targetRow = row + direction.getRow();
             int targetCol = col + direction.getCol();
@@ -64,6 +61,11 @@ public class GameController {
             conditionChecker.showLoseMessage();
         }
     }
+
+
+
+
+
     public void restartGame() {
         mapModel.resetOriginalMatrix();
         stateManager.restartGame(mapModel);

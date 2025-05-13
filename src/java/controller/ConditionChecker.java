@@ -18,11 +18,8 @@ public class ConditionChecker {
 
         //todo:以后这里根据mapType改变判断条件？
         // 示例：检查2×2方块即曹操是否在目标位置，这里的height和width应该是后来设置的判断条件，根据modeType决定。
-        if (height >= 3 && width >= 5) {
-            return matrix[position1[0]][position1[1]] == 4 &&
-                    matrix[position2[0]][position2[1]] == 4;
-        }
-        return false;
+            return matrix[2][1] == 4;
+
     }
     public boolean checkLoseCondition() {
         int[][] matrix = model.getMatrix();
@@ -34,8 +31,7 @@ public class ConditionChecker {
         //todo:以后这里根据mapType改变判断条件？
         // 示例：检查2×2方块即曹操是否在目标位置
         if (height >= 3 && width >= 5) {
-            return matrix[position1[0]][position1[1]] == 4 &&
-                    matrix[position2[0]][position2[1]] == 4;
+            return matrix[position1[0]][position1[1]] == 4;
         }
         return false;
     }
