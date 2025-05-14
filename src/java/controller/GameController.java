@@ -4,6 +4,7 @@ import model.Direction;
 import model.map.MapModel;
 import javafx.scene.control.Label;
 import view.game.BoxComponent;
+import view.game.GameFrame;
 import view.game.GamePanel;
 import model.timer.TimerManager;
 import model.GameSaveManager;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+
+
 public class GameController {
     private final GamePanel view;
     private final MapModel mapModel;
@@ -22,7 +26,7 @@ public class GameController {
     private final GameStateManager stateManager;
     private final TimerManager timerManager;
     private final GameSaveManager gameSaveManager;
-
+    private GameFrame gameFrame; // 添加对 GameFrame 的引用
 
     public GameController(GamePanel view, MapModel mapModel, TimerManager timerManager, GameSaveManager gameSaveManager) {
         this.view = view;
@@ -39,10 +43,15 @@ public class GameController {
     public void loadMap(MapModel newModel) {
         stateManager.loadMap(newModel);
     }
+    public void setGameFrame(GameFrame gameFrame) {
+        this.gameFrame = gameFrame;
+    }
 
     public boolean doMove(int row, int col, Direction direction) {
         int blockId = mapModel.getId(row, col);
         if (moveHandler.canMove(row, col, direction, blockId)) {
+            moveHandler.moveBlock(row, col, direction, blockId);
+
 // 获取目标位置
             int targetRow = row + direction.getRow();
             int targetCol = col + direction.getCol();
@@ -50,7 +59,13 @@ public class GameController {
             BoxComponent box = view.getBoxAt(row, col);
             box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
             moveHandler.moveBlock(row, col, direction, blockId);
+
+            //if (box != null) {
+            //                box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
+            //            }
 // 更新视图
+
+
             updateBoxPositions();
             // 自动保存
             try {
@@ -66,13 +81,15 @@ public class GameController {
     //todo:这里steps更新慢一步,最后胜利和成功的时候有延迟一步的情况
     //todo:或者改写逻辑尝试使用animatedMove效果
     //todo:改写以下,不要removeAllBoxes并且重新初始化,1是方法不规范,2是游戏逻辑不当
-    private void updateBoxPositions() {
+    public void updateBoxPositions() {
         view.removeAllBoxes();
         view.initialGame();
         if (conditionChecker.checkWinCondition()) {
             conditionChecker.playWinAnimation(view);
             conditionChecker.showWinMessage();
-        }if (conditionChecker.checkLoseCondition(view.getSteps(), timerManager)) {
+            restartGame();//获胜后重置
+        }
+        if (conditionChecker.checkLoseCondition(view.getSteps(), timerManager)) {
             conditionChecker.playLoseAnimation(view);
             conditionChecker.showLoseMessage();
         }
@@ -85,6 +102,9 @@ public class GameController {
     public void restartGame() {
         mapModel.resetOriginalMatrix();
         stateManager.restartGame(mapModel);
+        if (gameFrame != null) {
+            gameFrame.setFrameSteps(0); // 重置 GameFrame 的步数
+        }
 
         //移除动画显示效果
         view.getChildren().removeIf(node -> node instanceof Label && "Game Over".equals(((Label) node).getText()));
@@ -127,4 +147,5 @@ public class GameController {
             System.err.println("加载游戏时发生未知错误：" + e.getMessage());
         }
     }
+
 }

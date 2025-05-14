@@ -13,6 +13,8 @@ import controller.GameController;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.function.Consumer;
+
 public class GamePanel extends Pane {
     private List<BoxComponent> boxes;
     private MapModel mapModel;
@@ -22,6 +24,12 @@ public class GamePanel extends Pane {
     private BoxComponent selectedBox;
     private Label stepLabel;
     private Circle mouseShadow;//鼠标悬停阴影, 用于强化标记鼠标
+
+    private Consumer<Integer> stepUpdateCallback; // 步数更新回调
+
+    public void setStepUpdateCallback(Consumer<Integer> stepUpdateCallback) {
+        this.stepUpdateCallback = stepUpdateCallback;
+    }
 
     public GamePanel(MapModel mapModel) {
         boxes = new ArrayList<>();
@@ -191,6 +199,12 @@ public class GamePanel extends Pane {
         System.out.printf("Attempting move: row=%d, col=%d, direction=%s%n", row, col, direction);
         if (controller != null && controller.doMove(row, col, direction)) {
             afterMove(); // 更新全局步数
+            controller.updateBoxPositions();
+            // 保持选中状态
+            BoxComponent movedBox = getBoxAt(row+ direction.getRow(), col+ direction.getCol());
+            if (movedBox != null) {
+                setSelectedBox(movedBox);
+            }
             System.out.println("Move successful");
             return true;
         }
@@ -200,6 +214,9 @@ public class GamePanel extends Pane {
     public void afterMove() {
         steps++;
         updateStepLabel(); // 更新步数标签
+        if (stepUpdateCallback != null) {
+            stepUpdateCallback.accept(steps); // 通知外部更新步数
+        }
     }
 
     private void updateStepLabel() {

@@ -35,6 +35,12 @@ public class GameFrame extends Application {
     private MapModel mapModel;//当前游戏中传入的model模型
     private TimerManager timerManager;
 
+    public GameFrame(MapModel mapModel) {
+        this.mapModel = mapModel;
+    }
+    public void setFrameSteps(int steps) {
+        stepLabel.setText("Steps: " + steps);
+    }
     public GameFrame(MapModel mapModel, TimerManager timerManager) {
         this.timerManager = timerManager;
 
@@ -66,6 +72,7 @@ public class GameFrame extends Application {
         GameSaveManager gameSaveManager = new GameSaveManager();
         controller = new GameController(gamePanel, mapModel, timerManager, gameSaveManager);
         gamePanel.setController(controller);
+        controller.setGameFrame(this); // 设置 GameFrame 的引用
 
         // 创建UI组件
         stepLabel = new Label("Steps: 0");
@@ -102,6 +109,11 @@ public class GameFrame extends Application {
 
         // 初始焦点
         gamePanel.requestFocus();
+
+        // 设置步数更新回调
+
+        gamePanel.setStepUpdateCallback(steps -> stepLabel.setText("Steps: " + steps));
+
     }
 
     private Button createButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> action) {
@@ -128,6 +140,7 @@ public class GameFrame extends Application {
             }
         });
     }
+
     private void showError(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -135,6 +148,7 @@ public class GameFrame extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     public static void main(String[] args) {
         launch(args);
     }
