@@ -67,6 +67,7 @@ public class MapModel implements Serializable {
     public int getLeaseMove() {return leaseMove;}
     public String getMapName() {return mapName;}
     public String getMapId() {return mapId;}
+    public void setMapId(String mapId) {this.mapId = mapId;}
     public int[] getTargetPosition() {return targetPosition;}
 
     public boolean checkInWidthSize(int col) {

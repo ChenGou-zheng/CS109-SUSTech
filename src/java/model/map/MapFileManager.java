@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.nio.file.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.MessageDigest;
 
 public class MapFileManager {
 
@@ -18,8 +21,14 @@ public class MapFileManager {
 
         // 使用实例调用 toJson()
         JSONObject json = mapModel.toJson();
-        try (FileWriter writer = new FileWriter(MAP_DIR + mapModel.getMapId() + ".json")) {
-            writer.write(json.toString(2)); // 美化格式输出
+        String jsonContent = json.toString(2); // 美化格式输出
+
+        // 计算 SHA-256 值
+        String sha256 = calculateSHA256(jsonContent);
+        mapModel.setMapId(sha256); // 更新 mapId 为 SHA-256 值
+
+        try (FileWriter writer = new FileWriter(MAP_DIR + sha256 + ".json")) {
+            writer.write(jsonContent);
         }
     }
 
@@ -51,5 +60,20 @@ public class MapFileManager {
 
         JSONObject jsonObject = new JSONObject(content.toString());
         return MapModel.fromJson(jsonObject);
+    }
+
+    // 计算字符串的 SHA-256 值
+    private static String calculateSHA256(String content) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(content.getBytes());
+            StringBuilder hashString = new StringBuilder();
+            for (byte b : hashBytes) {
+                hashString.append(String.format("%02x", b));
+            }
+            return hashString.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("计算 SHA-256 失败", e);
+        }
     }
 }

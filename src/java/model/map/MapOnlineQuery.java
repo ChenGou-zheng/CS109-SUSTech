@@ -2,15 +2,14 @@ package model.map;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.awt.Desktop;
 
-public class smalltool {
+public class MapOnlineQuery {
     // 将二维数组按横向顺序读取存入一维数组
-    public static String convertMapData(int[][] mapData) {
+    private static String convertMapData(int[][] mapData) {
         int rows = mapData.length;
         int cols = mapData[0].length;
         int[] result = new int[rows * cols];
@@ -37,31 +36,44 @@ public class smalltool {
         return resultString.toString();
     }
 
-    //将运行中的mapData中的-1复原
-    //public static String revertMapData(int[][] mapData) {
+    private static int[][] revertMapData(int[][] mapData) {
+        for (int row = 0; row < mapData.length; row++) {
+            for (int col = 0; col < mapData[row].length; col++) {
+                switch (mapData[row][col]) {
+                    case 1:
+                        break;
+                    case 2:
+                        if (col + 1 < mapData[row].length) { // 检查右侧格子是否越界
+                            mapData[row][col + 1] = 2; // 占用右侧格子
+                        }
+                        break;
+                    case 3:
+                        if (row + 1 < mapData.length) { // 检查下方格子是否越界
+                            mapData[row + 1][col] = 3; // 占用下方格子
+                        }
+                        break;
+                    case 4:
+                        if (row + 1 < mapData.length && col + 1 < mapData[row].length) { // 检查右下角格子是否越界
+                            mapData[row][col + 1] = 4; // 占用右侧格子
+                            mapData[row + 1][col] = 4; // 占用下方格子
+                            mapData[row + 1][col + 1] = 4; // 占用右下角格子
+                        }
+                        break;
+                    case 0:
+                        break;//空地方无块
+                    case -1:
+                        break;//被覆盖已占用
+                }
+            }
+        }
+        return mapData;
+    }
 
-
-    //}
-
-    public static void main(String[] args) {
-        System.out.println("注意此处的步数计算规则不同.");
-        // 示例二维数组
-        int[][] mapData = new int[][]{
-                {3, 3, 1, 1},
-                {3, 3, 3, 3},
-                {4, 4, 3, 3},
-                {4, 4, 3, 1},
-                {0, 1, 3, 0}
-        };
-
-        // 调用方法并打印结果
-        String queryS = convertMapData(mapData);
+    public static boolean showSolution(int[][] mapData){
+        String queryData = convertMapData(revertMapData(mapData));
         StringBuilder apiUrl = null;
         apiUrl = new StringBuilder("https://klotski.online/solution?q=");
-        apiUrl.append(queryS);
-
-
-
+        apiUrl.append(queryData);
         try {
             // 创建 URL 对象
             URL url = new URL(apiUrl.toString());
@@ -86,18 +98,25 @@ public class smalltool {
                 }
                 in.close();
 
+                // 检查响应内容是否为 "Invalid Layout"
+                if (response.toString().contains("Invalid Layout")) {
+                    System.out.println("无效布局，未打开网站。");
+                    return false;
+                }
+
                 // 打印响应数据
                 System.out.println("API 响应: " + response.toString());
             } else {
                 System.out.println("请求失败，响应码: " + responseCode);
+                return false;
             }
 
             // 断开连接
             connection.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
         try {
             // 检查是否支持桌面操作
             if (Desktop.isDesktopSupported()) {
@@ -110,6 +129,10 @@ public class smalltool {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
+
+    //todo:这里有必要再解析它的解法文件吗?加上t=json就是解法文件
 }

@@ -25,11 +25,14 @@
 1. 这个handleLoadMap功能应该在GamePanel里面吗
 2. 注意：每一个功能模块方法都要在controller里面实现，view里面写同名方法调用以显示和交互
 
-## 学习使用的快捷键与功能
+## 学习使用的快捷键与功能Keymap
 1. ctrl + shift + alt + N 直接搜索类
 2. ctrl + R 替换
 3. ctrl + shift + F 全局搜索
 4. 左侧 toolbar 里面的 structure
+5. ctrl + shift + F12 关闭所有窗口
+6. ctrl + F4 关闭当前窗口
+7. ctrl + shift + - 折叠所有代码
 
 
 ## 尝试进行任务拆解

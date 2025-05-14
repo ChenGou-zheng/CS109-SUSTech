@@ -10,6 +10,7 @@ import model.GameSaveManager;
 
  // 定时器实例
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,8 +53,11 @@ public class GameController {
 // 更新视图
             updateBoxPositions();
             // 自动保存
-            gameSaveManager.autoSave("autosave.json", mapModel, view, timerManager);
-
+            try {
+                gameSaveManager.autoSave(mapModel, view.getSteps(), timerManager.getRemainingTime());
+            } catch (IOException e) {
+                System.err.println("自动保存失败：" + e.getMessage());
+            }
             return true;
         }
         return false;
@@ -88,26 +92,39 @@ public class GameController {
 
 
     public void saveGameProgress(String filePath, MapModel mapModel) {
-        gameSaveManager.saveGame(filePath, mapModel, view.getSteps(), timerManager.getRemainingTime());
+        try{
+            gameSaveManager.saveGame(filePath, mapModel, view.getSteps(), timerManager.getRemainingTime());}
+        catch(IOException e){
+            System.err.println("自动保存失败:" + e.getMessage());
+        }
     }
 
     public void loadGameProgress(String filePath) {
-        Object[] gameData = GameSaveManager.loadGame(filePath);
-        if (gameData != null) {
-            MapModel loadedMapModel = (MapModel) gameData[0];
-            int steps = (int) gameData[1];
-            long remainingTime = (long) gameData[2];
+        try {
+            // 调用 GameSaveManager 的 loadGame 方法加载游戏数据
+            Object[] gameData = gameSaveManager.loadGame(filePath);
 
-            // 更新游戏状态
-            mapModel.setMatrix(loadedMapModel.getMatrix());
-            view.setSteps(steps);
-            timerManager.setRemainingTime(remainingTime);
+            if (gameData != null) {
+                // 提取加载的数据
+                MapModel loadedMapModel = (MapModel) gameData[0];
+                int steps = (int) gameData[1];
+                long remainingTime = (long) gameData[2];
 
-            // 重新加载地图
-            stateManager.loadMap(mapModel);
-            System.out.println("游戏进度已恢复！");
-        } else {
-            System.out.println("加载游戏进度失败！");
+                // 更新游戏状态
+                mapModel.setMatrix(loadedMapModel.getMatrix());
+                view.setSteps(steps);
+                timerManager.setRemainingTime(remainingTime);
+
+                // 重新加载地图
+                stateManager.loadMap(mapModel);
+                System.out.println("游戏进度已成功加载！");
+            } else {
+                System.out.println("加载的游戏数据为空！");
+            }
+        } catch (IOException e) {
+            System.err.println("加载游戏进度失败：" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("加载游戏时发生未知错误：" + e.getMessage());
         }
     }
 }
