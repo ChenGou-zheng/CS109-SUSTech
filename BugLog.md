@@ -51,4 +51,8 @@ update：已解决选中后红框不完全的问题，需要在选中状态时�
 4 键盘方向键操控了Restart和Load button 问题：选中棋子后，按方向键时不能移动棋子，但是改变了Restart 和 Load button 的选中状态（蓝框），是不是不应该被选中？？
 update：已解决，通过设置按钮的 setFocusTraversable(false) 来禁用按钮的焦点，使得它们不会响应键盘焦点切换。
 5 有一些棋子可以进行非法移动，如1*1block会移动到1*2block里并且消失
+update：已解决
 疑问：为什么GameStateManager里LoadGame要重置步数？不是应该保存现有步数吗？
+6 获胜前最后一步，先显示胜利信息才更新步数
+update:将GameController里updateBoxPosition改为public，之后在Gamepanel里先更新步数再调用controller的updateBoxPosition方法。
+7 获胜后，是否重置游戏，后续可以做更多选项？
