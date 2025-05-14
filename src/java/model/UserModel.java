@@ -43,18 +43,35 @@ public class UserModel {
         }
     }
 
-    // 添加用户
-    public boolean addUser(String username, String password) {
+    public boolean addUser(String username, String password, String email) {
         if (getUser(username) != null) {
             return false; // 用户已存在
         }
         JSONObject user = new JSONObject();
         user.put("username", username);
         user.put("password", password);
-        user.put("gameData", new JSONObject()); // 为游戏数据留出空间
+        user.put("email", email); // 添加邮箱字段
+        user.put("gameData", new JSONObject());
         users.put(user);
         saveUsers();
         return true;
+    }
+
+    // 更新用户邮箱
+    public boolean updateEmail(String username, String newEmail) {
+        JSONObject user = getUser(username);
+        if (user == null) {
+            return false; // 用户不存在
+        }
+        user.put("email", newEmail);
+        saveUsers();
+        return true;
+    }
+
+    // 获取用户邮箱
+    public String getEmail(String username) {
+        JSONObject user = getUser(username);
+        return user != null ? user.getString("email") : null;
     }
 
     // 修改用户密码

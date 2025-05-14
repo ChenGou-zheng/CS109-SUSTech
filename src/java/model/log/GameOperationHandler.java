@@ -1,15 +1,16 @@
 package model.log;
 
-import model.LogModel;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 
 public class GameOperationHandler implements InvocationHandler {
 
     private final Object target;           // 被代理的真实对象（例如 Board）
     private final LogModel logModel;       // 日志记录器
-    private String currentUser;            // 当前用户
+    private final String currentUser;      // 当前用户
 
     public GameOperationHandler(Object target, LogModel logModel, String currentUser) {
         this.target = target;
@@ -22,14 +23,32 @@ public class GameOperationHandler implements InvocationHandler {
         // 1. 执行原始方法
         Object result = method.invoke(target, args);
 
-        // 2. 只对特定方法添加日志
-        if (shouldLog(method.getName())) {
-            recordLog(method.getName(), args);
+        if (method.getName().equals("saveGame") && args != null && args.length >= 2) {
+            int[][] mapData = (int[][]) args[1];
+            String sha256Hash = calculateSHA256(mapData);
+            recordSHA256AndMapData(sha256Hash, mapData);
         }
 
         return result;
     }
 
+    private String calculateSHA256(int[][] mapData) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        StringBuilder mapString = new StringBuilder();
+        for (int[] row : mapData) {
+            for (int cell : row) {
+                mapString.append(cell).append(",");
+            }
+        }
+        byte[] hash = digest.digest(mapString.toString().getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(hash);
+    }
+
+    private void recordSHA256AndMapData(String sha256Hash, int[][] mapData) {
+        // 假设 LogModel 提供了 addSHA256Log 方法
+        logModel.addSHA256Log(currentUser, sha256Hash, mapData);
+    }
+/*
     // 判断哪些方法需要记录日志
     private boolean shouldLog(String methodName) {
         return methodName.startsWith("move") ||
@@ -57,4 +76,6 @@ public class GameOperationHandler implements InvocationHandler {
         // 添加日志（默认密码为空或传入其他方式获取）
         logModel.addLog(currentUser, "", mapModel, action);
     }
+
+ */
 }

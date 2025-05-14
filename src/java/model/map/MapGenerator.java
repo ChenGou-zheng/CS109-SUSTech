@@ -1,11 +1,45 @@
 package model.map;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import model.map.MapOnlineQuery;
 
 public class MapGenerator {
+
+//todo:这个速度疑似太慢了.全局检查深拷贝和浅拷贝问题
+public static int[][] generateMap() {
+    int rows = 5;
+    int cols = 4;
+    int[][] map = new int[rows][cols];
+    List<int[]> emptySpaces = initializeEmptySpaces(rows, cols);
+
+    // 放置曹操 (2*2)
+    placeBlock(map, emptySpaces, 4, 2, 2);
+
+    // 放置5个2号或3号棋子
+    Random random = new Random();
+    for (int i = 0; i < 5; i++) {
+        int blockType = random.nextBoolean() ? 2 : 3; // 随机选择横向(2)或竖向(3)
+        placeBlock(map, emptySpaces, blockType, blockType == 2 ? 1 : 2, blockType == 2 ? 2 : 1);
+    }
+
+    // 放置4个1*1的棋子
+    for (int i = 0; i < 4; i++) {
+        placeBlock(map, emptySpaces, 1, 1, 1);
+    }
+
+    // 确保有两个空位
+    for (int i = 0; i < 2; i++) {
+        if (!emptySpaces.isEmpty()) {
+            int[] position = emptySpaces.remove(0);
+            map[position[0]][position[1]] = 0;
+        }
+    }
+
+    return map;
+}
+
     private static List<int[]> initializeEmptySpaces(int rows, int cols) {
         List<int[]> emptySpaces = new ArrayList<>();
         for (int i = 0; i < rows; i++) {
@@ -16,35 +50,35 @@ public class MapGenerator {
         return emptySpaces;
     }
 
-    private static void placeBlock(int[][] map, List<int[]> emptySpaces, int blockId, int size, Random random) {
-        boolean placed = false;
-        while (!placed && !emptySpaces.isEmpty()) {
-            int index = random.nextInt(emptySpaces.size());
-            int[] position = emptySpaces.get(index);
+    private static void placeBlock(int[][] map, List<int[]> emptySpaces, int blockId, int height, int width) {
+        for (int i = 0; i < emptySpaces.size(); i++) {
+            int[] position = emptySpaces.get(i);
             int row = position[0];
             int col = position[1];
 
-            if (canPlaceBlock(map, row, col, size)) {
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        map[row + i][col + j] = blockId;
-                        final int occupiedRow = row + i;
-                        final int occupiedCol = col + j;
+            if (canPlaceBlock(map, row, col, height, width)) {
+                for (int r = 0; r < height; r++) {
+                    for (int c = 0; c < width; c++) {
+                        map[row + r][col + c] = blockId;
+                        final int occupiedRow = row + r; // 使用 final 局部变量
+                        final int occupiedCol = col + c; // 使用 final 局部变量
+
                         emptySpaces.removeIf(space -> space[0] == occupiedRow && space[1] == occupiedCol);
                     }
                 }
-                placed = true;
+                return;
             }
         }
+        throw new RuntimeException("无法放置方块，检查生成逻辑");
     }
 
-    private static boolean canPlaceBlock(int[][] map, int row, int col, int size) {
-        if (row + size > 5 || col + size > 4) {
+    private static boolean canPlaceBlock(int[][] map, int row, int col, int height, int width) {
+        if (row + height > map.length || col + width > map[0].length) {
             return false;
         }
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (map[row + i][col + j] != 0) {
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                if (map[row + r][col + c] != 0) {
                     return false;
                 }
             }
@@ -52,54 +86,33 @@ public class MapGenerator {
         return true;
     }
 
-    private static void addZeroBlocks(int[][] map, List<int[]> emptySpaces, Random random) {
-        for (int i = 0; i < 2; i++) { // 生成两个 0 块
-            if (!emptySpaces.isEmpty()) {
-                int index = random.nextInt(emptySpaces.size());
-                int[] position = emptySpaces.remove(index); // 从空闲位置中移除
-                map[position[0]][position[1]] = 0; // 设置为 0 块
+    public static void printMap(int[][] map) {
+        for (int[] row : map) {
+            for (int cell : row) {
+                System.out.print(cell + " ");
             }
+            System.out.println();
         }
     }
 
-    public static int[][] generateMap() {
-        int[][] map = new int[5][4];
-        List<int[]> emptySpaces = initializeEmptySpaces(5, 4);
-        Random random = new Random();
 
-        // 按优先级放置方块
-        placeBlock(map, emptySpaces, 4, 2, random); // 放置大块（2*2）
-        for (int i = 0; i < 4; i++) {
-            placeBlock(map, emptySpaces, 3, 1, random); // 放置竖块（2*1）
-        }
-        for (int i = 0; i < 2; i++) {
-            placeBlock(map, emptySpaces, 2, 2, random); // 放置横块（1*2）
-        }
-        for (int i = 0; i < 4; i++) {
-            placeBlock(map, emptySpaces, 1, 1, random); // 放置单块（1*1）
-        }
-
-        // 添加两个 0 块
-        addZeroBlocks(map, emptySpaces, random);
-
-        return map;
-    }
-//todo:这个速度疑似太慢了.全局检查深拷贝和浅拷贝问题
-    public static int[][] checkMap(){
-        boolean isGenerated = false;
-        while (!isGenerated) {
+    public static int[][] checkMap() {
+        int maxAttempts = 10000; // 设置最大尝试次数，避免死循环
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
             int[][] map = generateMap();
             if (MapOnlineQuery.showSolution(map)) {
-                isGenerated = true;
-                return map;
+                return map; // 找到可解的地图，直接返回
             }
         }
-        return null;
+       throw new RuntimeException("生成次数过多,请重新尝试"); // 超过最大尝试次数，抛出异常
     }
 
     public static void main(String[] args) {
-        checkMap();
+        int[][] map = checkMap();
+        printMap(map);
+        System.out.println("找到可解的地图，已保存到文件!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
+
 }
 //todo:后续可添加功能
 /*

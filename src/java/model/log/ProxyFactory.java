@@ -1,7 +1,6 @@
 package model.log;
 
 import java.lang.reflect.Proxy;
-import model.LogModel;
 
 public class ProxyFactory {
 

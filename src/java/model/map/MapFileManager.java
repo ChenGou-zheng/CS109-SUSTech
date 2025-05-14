@@ -10,11 +10,12 @@ import java.security.MessageDigest;
 
 public class MapFileManager {
 
-    private static final String MAP_DIR = "maps/";
+    private static final String MAP_DIR = "src/resources/maps/";
+    private static final String MAP_DIR_DEFAULT = "src/resources/maps/default/";
     // 设计思路:通过mapId来唯一标识地图文件,操作文件的时候显然更简便
     // 存储地图
     public static void saveMap(MapModel mapModel) throws IOException {
-        Path dirPath = Paths.get(MAP_DIR);
+        Path dirPath = Paths.get(MAP_DIR_DEFAULT);
         if (!Files.exists(dirPath)) {
             Files.createDirectories(dirPath);
         }
@@ -27,7 +28,7 @@ public class MapFileManager {
         String sha256 = calculateSHA256(jsonContent);
         mapModel.setMapId(sha256); // 更新 mapId 为 SHA-256 值
 
-        try (FileWriter writer = new FileWriter(MAP_DIR + sha256 + ".json")) {
+        try (FileWriter writer = new FileWriter(MAP_DIR_DEFAULT + sha256 + ".json")) {
             writer.write(jsonContent);
         }
     }
@@ -45,7 +46,7 @@ public class MapFileManager {
 
     // 加载地图
     public static MapModel loadMapFromFile(String mapId) throws IOException {
-        Path path = Paths.get(MAP_DIR + mapId + ".json");
+        Path path = Paths.get(MAP_DIR_DEFAULT + mapId + ".json");
         if (!Files.exists(path)) {
             throw new FileNotFoundException("地图文件不存在: " + mapId + ".json");
         }

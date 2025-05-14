@@ -24,17 +24,19 @@ import model.timer.TimerManager;
 
 
 public class GameSaveManager {
-    // 保存游戏进度,但是不需要类实例化
-    private static final String MAP_DIR = "maps/";
-    private static final String AUTO_SAVE_FILE = "maps/autoSave.json";
-
-
-
+    // todo:保存游戏进度,但是不需要类实例化,使用静态方法改写
+    private static final String MAP_DIR = "src/resources/archives/autosave/";
+    private static final String AUTO_SAVE_FILE = "src/resources/archives/autosave/autoSave.json";
+//todo:autoSave应该是和专属于用户,而且每次打开新游戏创建一份新的,还有两个字段:accout and mapId
+//todo:对应的autoload
 
     // 使用 JSON 保存游戏
     public static void saveGame(String saveFilePath, MapModel mapModel, int steps, long remainingTime) throws IOException {
-        Path dirPath = Paths.get(MAP_DIR);
-        if (!Files.exists(dirPath)) {
+        Path filePath = Paths.get(saveFilePath);
+        Path dirPath = filePath.getParent(); // 获取文件夹路径
+
+        // 如果文件夹不存在，则创建
+        if (dirPath != null && !Files.exists(dirPath)) {
             Files.createDirectories(dirPath);
         }
 

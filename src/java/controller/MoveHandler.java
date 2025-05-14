@@ -16,6 +16,7 @@ public class MoveHandler {
         int newCol = col + dir.getCol();
         clearBlockAfterMove(row, col, blockId);
         setBlock(newRow, newCol, blockId);
+
     }
 
     //感觉是检查到自己身上来了。所以必须逐个定义，先查范围后查可行。

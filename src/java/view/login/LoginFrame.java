@@ -34,11 +34,11 @@ public class LoginFrame extends Application {
         password = FrameUtil.createPasswordField(root, 120, 125, 200);
 
         // 按钮
-        submitBtn = FrameUtil.createButton(root, "Confirm", 80, 180);
+        submitBtn = FrameUtil.createButton(root, "Confirm","file:resources/icons/submit.png", 80, 180);
         submitBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         submitBtn.setPrefWidth(100);
 
-        resetBtn = FrameUtil.createButton(root, "Reset", 220, 180);
+        resetBtn = FrameUtil.createButton(root, "Reset", "file:resources/icons/reset.png",220, 180);
         resetBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
         resetBtn.setPrefWidth(100);
 

@@ -9,6 +9,9 @@ import view.game.GamePanel;
 import model.timer.TimerManager;
 import model.GameSaveManager;
 
+import model.log.LogModel;
+import model.map.MapModel;
+
  // 定时器实例
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ import java.util.TimerTask;
 
 
 public class GameController {
+    private final LogModel logModel;
     private final GamePanel view;
     private final MapModel mapModel;
     private final MoveHandler moveHandler;
@@ -28,8 +32,9 @@ public class GameController {
     private final GameSaveManager gameSaveManager;
     private GameFrame gameFrame; // 添加对 GameFrame 的引用
 
-    public GameController(GamePanel view, MapModel mapModel, TimerManager timerManager, GameSaveManager gameSaveManager) {
+    public GameController(LogModel logModel, GamePanel view, MapModel mapModel, TimerManager timerManager, GameSaveManager gameSaveManager) {
         this.view = view;
+        this.logModel = logModel;
         this.mapModel = mapModel;
         this.view.setController(this);
         this.moveHandler = new MoveHandler(mapModel);
@@ -51,6 +56,7 @@ public class GameController {
         int blockId = mapModel.getId(row, col);
         if (moveHandler.canMove(row, col, direction, blockId)) {
             moveHandler.moveBlock(row, col, direction, blockId);
+            logModel.addGameLog(mapModel.getMatrix(), "Move block " + blockId + " to " + direction.name());
 
 // 获取目标位置
             int targetRow = row + direction.getRow();
@@ -58,7 +64,6 @@ public class GameController {
 // 获取对应的 BoxComponent
             BoxComponent box = view.getBoxAt(row, col);
             box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
-            moveHandler.moveBlock(row, col, direction, blockId);
 
             //if (box != null) {
             //                box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
@@ -119,6 +124,20 @@ public class GameController {
         }
     }
 
+    public void saveGameState(String action) {
+        logModel.addGameLog(mapModel.getMatrix(), action);
+    }
+
+
+    public void undo() {
+        int[][] lastState = logModel.getLastState();
+        if (lastState != null) {
+            mapModel.setMatrix(lastState);
+            // 更新游戏界面
+        }
+        updateBoxPositions();
+    }
+
     public void loadGameProgress(String filePath) {
         try {
             // 调用 GameSaveManager 的 loadGame 方法加载游戏数据
@@ -147,5 +166,7 @@ public class GameController {
             System.err.println("加载游戏时发生未知错误：" + e.getMessage());
         }
     }
-
+    public int getSteps(){
+        return view.getSteps();
+    }
 }

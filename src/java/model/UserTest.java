@@ -14,7 +14,7 @@ public class UserTest {
         UserModel userModel = new UserModel();
 
         // 添加用户
-        userModel.addUser("player1", "password123");
+        userModel.addUser("player1", "password123","12412903@mail.sustech.edu.cn");
 
         // 验证用户
         System.out.println(userModel.validateUser("player1", "password123")); // true

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.security.MessageDigest;
 
 public class FileHashUtil {
+    //todo:后续添加文件SHA256值一键比较功能,或者是防止玩家作弊
     public static String getFileSHA256(File file) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         try (FileInputStream fis = new FileInputStream(file)) {

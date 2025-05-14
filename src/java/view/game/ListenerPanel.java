@@ -18,10 +18,10 @@ public abstract class ListenerPanel extends Pane {
 
     private void handleKeyEvent(KeyEvent e) {
         switch (e.getCode()) {
-            case RIGHT -> doMoveRight();
-            case LEFT -> doMoveLeft();
-            case UP -> doMoveUp();
-            case DOWN -> doMoveDown();
+            case RIGHT, D -> doMoveRight();
+            case LEFT, A -> doMoveLeft();
+            case UP, W -> doMoveUp();
+            case DOWN, S -> doMoveDown();
         }
     }
 
