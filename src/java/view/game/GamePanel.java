@@ -6,8 +6,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 import model.Direction;
-import model.MapModel;
+import model.map.MapModel;
 import controller.GameController;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +110,8 @@ public class GamePanel extends Pane {
 
     public void initialGame() {
         // 重置步数并更新步数标签
+        //为什么要重置步数？导致步数一直为1
+//        this.steps = 0;
         updateStepLabel();
 
         // 清空现有的 BoxComponent
@@ -130,7 +133,7 @@ public class GamePanel extends Pane {
                     boxes.add(box);
                     this.getChildren().add(box);
 
-                    // 添加鼠标点击事件
+                    // 添加鼠标点击事件，使得每个棋子可以被点击
                     box.setOnMouseClicked(e -> handleBoxClick(box));
                 }
             }
@@ -190,6 +193,7 @@ public class GamePanel extends Pane {
             selectedBox = null;
         }
     }
+
 
     public boolean doMove(int row, int col, Direction direction) {
         System.out.printf("Attempting move: row=%d, col=%d, direction=%s%n", row, col, direction);

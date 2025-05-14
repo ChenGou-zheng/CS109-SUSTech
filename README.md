@@ -1,6 +1,6 @@
 # CS109-SUSTech
 
-## 需要书语解决的bug
+## 需要书语添加的功能
 提示：改代码的时候写一下buglog方便理解工作。
 1. 块体选中状态会自动消失——应该是用boxcomponent getboxat方法
 2. 继承Listener抽象类后鼠标选中失效.
@@ -15,8 +15,7 @@
 5. Steps 更新问题
 6. GamePanel里面吗getGridSize 干什么用？根据地图是不是直接替代了。
 7. 华容道游戏模式有暂停吗？或者 ConditionChecker 里面除了 win, lose 还有别的需求吗？要写个 pauseCondition吗——以后的步数限制、时长限制可以另行补充。
-8. 方块移动有时突然不动了——是我的电脑问题吗？
-9. 方块碰撞会消失？？
+
 
 //写注释真是好习惯
 //写输出日志也是好习惯
@@ -26,11 +25,14 @@
 1. 这个handleLoadMap功能应该在GamePanel里面吗
 2. 注意：每一个功能模块方法都要在controller里面实现，view里面写同名方法调用以显示和交互
 
-## 学习使用的快捷键与功能
+## 学习使用的快捷键与功能Keymap
 1. ctrl + shift + alt + N 直接搜索类
 2. ctrl + R 替换
 3. ctrl + shift + F 全局搜索
 4. 左侧 toolbar 里面的 structure
+5. ctrl + shift + F12 关闭所有窗口
+6. ctrl + F4 关闭当前窗口
+7. ctrl + shift + - 折叠所有代码
 
 
 ## 尝试进行任务拆解
@@ -305,3 +307,7 @@ view界面（Doki或者植物大战僵尸）
 ## AP功能
 华容道深度研究：http://bbs.mf8-china.com/forum.php?mod=viewthread&tid=72215
 NOI求解算法赛题 ： https://www.luogu.com.cn/problem/P1979
+
+
+已调用实现
+- 遍历解法:https://klotski.online/pages/about-klotski.html

@@ -1,5 +1,4 @@
-/*
-package model;
+package model.map;
 
 import org.json.JSONObject;
 
@@ -10,4 +9,3 @@ public class JsonTest {
         System.out.println(obj.toString());
     }
 }
- */

@@ -1,12 +1,22 @@
 package controller;
 
 import model.Direction;
-import model.MapModel;
+import model.map.MapModel;
+import javafx.scene.control.Label;
 import view.game.BoxComponent;
 import view.game.GameFrame;
 import view.game.GamePanel;
-import view.game.BoxComponent;
-import controller.ConditionChecker;
+import model.timer.TimerManager;
+import model.GameSaveManager;
+
+ // 定时器实例
+
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+
 
 public class GameController {
     private final GamePanel view;
@@ -14,25 +24,27 @@ public class GameController {
     private final MoveHandler moveHandler;
     private final ConditionChecker conditionChecker;
     private final GameStateManager stateManager;
-
+    private final TimerManager timerManager;
+    private final GameSaveManager gameSaveManager;
     private GameFrame gameFrame; // 添加对 GameFrame 的引用
 
-    public void setGameFrame(GameFrame gameFrame) {
-        this.gameFrame = gameFrame;
-    }
-
-    public GameController(GamePanel view, MapModel mapModel) {
+    public GameController(GamePanel view, MapModel mapModel, TimerManager timerManager, GameSaveManager gameSaveManager) {
         this.view = view;
         this.mapModel = mapModel;
         this.view.setController(this);
         this.moveHandler = new MoveHandler(mapModel);
         this.conditionChecker = new ConditionChecker(mapModel);
         this.stateManager = new GameStateManager(view);
+        this.timerManager = new TimerManager(30000);// 30秒倒计时//todo:这里还没想好在什么地方设置并更新
+        this.gameSaveManager = gameSaveManager;
     }
     public MoveHandler getMoveHandler() {return moveHandler;}
 
     public void loadMap(MapModel newModel) {
         stateManager.loadMap(newModel);
+    }
+    public void setGameFrame(GameFrame gameFrame) {
+        this.gameFrame = gameFrame;
     }
 
     public boolean doMove(int row, int col, Direction direction) {
@@ -43,29 +55,42 @@ public class GameController {
 // 获取目标位置
             int targetRow = row + direction.getRow();
             int targetCol = col + direction.getCol();
-
 // 获取对应的 BoxComponent
             BoxComponent box = view.getBoxAt(row, col);
-            if (box != null) {
-                box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
-            }
+            box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
+            moveHandler.moveBlock(row, col, direction, blockId);
 
+            //if (box != null) {
+            //                box.animateMove(targetRow, targetCol, view.getGRID_SIZE());
+            //            }
 // 更新视图
-//            updateBoxPositions();
 
 
+            updateBoxPositions();
+            // 自动保存
+            try {
+                gameSaveManager.autoSave(mapModel, view.getSteps(), timerManager.getRemainingTime());
+            } catch (IOException e) {
+                System.err.println("自动保存失败：" + e.getMessage());
+            }
             return true;
         }
         return false;
     }
 
+    //todo:这里steps更新慢一步,最后胜利和成功的时候有延迟一步的情况
+    //todo:或者改写逻辑尝试使用animatedMove效果
+    //todo:改写以下,不要removeAllBoxes并且重新初始化,1是方法不规范,2是游戏逻辑不当
     public void updateBoxPositions() {
         view.removeAllBoxes();
         view.initialGame();
         if (conditionChecker.checkWinCondition()) {
+            conditionChecker.playWinAnimation(view);
             conditionChecker.showWinMessage();
             restartGame();//获胜后重置
-        }if (conditionChecker.checkLoseCondition()){
+        }
+        if (conditionChecker.checkLoseCondition(view.getSteps(), timerManager)) {
+            conditionChecker.playLoseAnimation(view);
             conditionChecker.showLoseMessage();
         }
     }
@@ -79,6 +104,47 @@ public class GameController {
         stateManager.restartGame(mapModel);
         if (gameFrame != null) {
             gameFrame.setFrameSteps(0); // 重置 GameFrame 的步数
+        }
+
+        //移除动画显示效果
+        view.getChildren().removeIf(node -> node instanceof Label && "Game Over".equals(((Label) node).getText()));
+    }
+
+
+    public void saveGameProgress(String filePath, MapModel mapModel) {
+        try{
+            gameSaveManager.saveGame(filePath, mapModel, view.getSteps(), timerManager.getRemainingTime());}
+        catch(IOException e){
+            System.err.println("自动保存失败:" + e.getMessage());
+        }
+    }
+
+    public void loadGameProgress(String filePath) {
+        try {
+            // 调用 GameSaveManager 的 loadGame 方法加载游戏数据
+            Object[] gameData = gameSaveManager.loadGame(filePath);
+
+            if (gameData != null) {
+                // 提取加载的数据
+                MapModel loadedMapModel = (MapModel) gameData[0];
+                int steps = (int) gameData[1];
+                long remainingTime = (long) gameData[2];
+
+                // 更新游戏状态
+                mapModel.setMatrix(loadedMapModel.getMatrix());
+                view.setSteps(steps);
+                timerManager.setRemainingTime(remainingTime);
+
+                // 重新加载地图
+                stateManager.loadMap(mapModel);
+                System.out.println("游戏进度已成功加载！");
+            } else {
+                System.out.println("加载的游戏数据为空！");
+            }
+        } catch (IOException e) {
+            System.err.println("加载游戏进度失败：" + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("加载游戏时发生未知错误：" + e.getMessage());
         }
     }
 

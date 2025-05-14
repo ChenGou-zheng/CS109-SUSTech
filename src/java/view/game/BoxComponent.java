@@ -24,6 +24,7 @@ public class BoxComponent extends StackPane {
         this.col = col;
         this.isSelected = false;
 
+
         rectangle = new Rectangle(width, height, color);
         rectangle.setStroke(Color.DARKGRAY);
         rectangle.setStrokeWidth(1);
@@ -73,6 +74,7 @@ public class BoxComponent extends StackPane {
     }
 
     public void animateMove(int targetRow, int targetCol, double gridSize) {
+        //只是一个UI的动画效果,不影响逻辑
         double newX = targetCol * gridSize + 2; // 根据列计算目标X坐标
         double newY = targetRow * gridSize + 2; // 根据行计算目标Y坐标
 
@@ -88,6 +90,7 @@ public class BoxComponent extends StackPane {
     public void setRow(int row) { this.row = row; }
     public int getCol() { return col; }
     public void setCol(int col) { this.col = col; }
+    public Rectangle getRectangle() { return rectangle; }
 
     public void bringToFront() {
         if (this.getParent() != null) {
