@@ -1,7 +1,7 @@
 package controller;
 
 import model.Direction;
-import model.MapModel;
+import model.map.MapModel;
 
 public class MoveHandler {
     private final MapModel mapModel;

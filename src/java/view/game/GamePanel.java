@@ -6,7 +6,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 import model.Direction;
-import model.MapModel;
+import model.map.MapModel;
 import controller.GameController;
 
 
@@ -171,10 +171,6 @@ public class GamePanel extends Pane {
         }
         return box;
     }
-
-
-
-
 
     private void handleBoxClick(BoxComponent clickedComponent) {
         if (selectedBox == null) {

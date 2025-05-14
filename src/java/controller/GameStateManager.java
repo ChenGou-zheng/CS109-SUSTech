@@ -1,6 +1,6 @@
 package controller;
 
-import model.MapModel;
+import model.map.MapModel;
 import view.game.GamePanel;
 
 //解耦功能，集成接口，但是暂时不知道怎么使用跳过

@@ -11,11 +11,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
-import model.MapModel;
+import model.GameSaveManager;
+import model.map.MapModel;
 import controller.GameController;
-import model.Direction;
-import model.MapFileManager;
+import model.map.MapFileManager;
+import model.timer.TimerManager;
 
 
 public class GameFrame extends Application {
@@ -23,18 +29,42 @@ public class GameFrame extends Application {
     private Button restartBtn;
     private Button loadBtn;
     private Label stepLabel;
+    private Label timeLabel;
+    private Timeline timeline;
     private GamePanel gamePanel;
     private MapModel mapModel;//当前游戏中传入的model模型
+    private TimerManager timerManager;
 
-    public GameFrame(MapModel mapModel) {
-        this.mapModel = mapModel;
-    }
+    public GameFrame(MapModel mapModel, TimerManager timerManager) {
+        this.timerManager = timerManager;
+
+        this.mapModel = mapModel;}
 
     @Override
     public void start(Stage primaryStage) {
+        // 初始化计时器显示
+        timeLabel = new Label("Time Left: " + formatTime(timerManager.getRemainingTime()));
+        timeLabel.setStyle("-fx-font-size: 16; -fx-text-fill: black;");
+
+        // 定时更新计时器
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            long remainingTime = timerManager.getRemainingTime();
+            timeLabel.setText("Time Left: " + formatTime(remainingTime));
+            if (remainingTime <= 0) {
+                timeline.stop();
+                // 触发时间到的逻辑
+                onTimeUp();
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+
+
+
         // 初始化模型和面板
         gamePanel = new GamePanel(mapModel);
-        controller = new GameController(gamePanel, mapModel);
+        GameSaveManager gameSaveManager = new GameSaveManager();
+        controller = new GameController(gamePanel, mapModel, timerManager, gameSaveManager);
         gamePanel.setController(controller);
 
         // 创建UI组件
@@ -107,5 +137,24 @@ public class GameFrame extends Application {
     }
     public static void main(String[] args) {
         launch(args);
+    }
+
+
+    private String formatTime(long millis) {
+        int seconds = (int) (millis / 1000);
+        int minutes = seconds / 60;
+        seconds %= 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void onTimeUp() {
+        System.out.println("Time is up! Game over.");
+        // 可以在这里调用失败逻辑或显示提示
+    }
+
+    public VBox getGameLayout() {
+        VBox layout = new VBox(10, timeLabel);
+        layout.setStyle("-fx-padding: 10;");
+        return layout;
     }
 }
